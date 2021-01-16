@@ -61,7 +61,6 @@ public class PixelColor extends Color{
 			}
 		}
 		if (index == -1) {
-			System.out.println("Found no match");
 			return null;
 		}
 		return new String[] {COLOR_ID[Math.floorDiv(index, 3)], VALUE[index % 3]};

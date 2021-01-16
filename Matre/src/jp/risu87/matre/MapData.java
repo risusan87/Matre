@@ -1,5 +1,6 @@
 package jp.risu87.matre;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,8 +29,9 @@ import jp.risu87.nbtio.nbt.tag.ListTag;
 public class MapData {
 	
 	private NBT map;
+	private BufferedImage rawmap;
 	
-	public MapData() {
+	public MapData(BufferedImage par1rawmap) {
 		this.map = NBT.createNBTTag(null, "dat");
 		CompoundTag data = new CompoundTag("data");
 		ByteTag scale = new ByteTag("scale", (byte)0);
@@ -41,6 +43,7 @@ public class MapData {
 		IntTag z_center = new IntTag("zCenter", 0);
 		ListTag<CompoundTag> banners = new ListTag<CompoundTag>("banners");
 		ListTag<CompoundTag> frames = new ListTag<CompoundTag>("frames");
+		byte[] colors_b = new byte[16384]; //128 * 128
 		ByteArrayTag colors = new ByteArrayTag("colors", null);
 		data.addTag(scale, dimension, tracking_position, unlimited_tracking, locked, x_center, z_center);
 		data.addTag(banners, frames, colors);
