@@ -8,11 +8,20 @@ import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 
+/**
+ * マインクラフト内で扱う151種類の色の計算や割り当てを担当します。
+ * 変換時はピクセル毎にフォーカスして変換するので結構時間がかかります。
+ * 比較的膨大なメモリを占領するのが難点。
+ * 
+ * @deprecated MapImageに全ての機能を移植しました。
+ * @author kobayashi
+ */
 @SuppressWarnings("serial")
-public class PixelColor extends Color{
+@Deprecated
+public class PixelColor extends Color {
 	
 	public static final String COLOR_ID[] = {
-		"GRASS", "SAND", "WOOL", "FIRE", "ICE", "METAL", "PLANT", "SNOW", "CLAY", "DIRT",
+		"VOID", "GRASS", "SAND", "WOOL", "FIRE", "ICE", "METAL", "PLANT", "SNOW", "CLAY", "DIRT",
 		"STONE", "WATER", "WOOD", "QUARTZ", "COLOR_ORANGE", "COLOR_MAGENTA", "COLOR_LIGHT_BLUE",
 		"COLOR_YELLOW", "COLOR_LIGHT_GREEN", "COLOR_PINK", "COLOR_GRAY", "COLOR_LIGHT_GRAY",
 		"COLOR_CYAN", "COLOR_PURPLE", "COLOR_BLUE", "COLOR_BROWN", "COLOR_GREEN", "COLOR_RED",
@@ -55,7 +64,7 @@ public class PixelColor extends Color{
 	public static String[] getPixelIdentification(Color par1color) {
 		int index = -1;
 		for (int i = 0; i < 153; i++) {
-			if (totalColors[i].equals(par1color)) {
+			if (totalColors[i].getRGB() == par1color.getRGB()) {
 				index = i;
 				break;
 			}
@@ -63,7 +72,7 @@ public class PixelColor extends Color{
 		if (index == -1) {
 			return null;
 		}
-		return new String[] {COLOR_ID[Math.floorDiv(index, 3)], VALUE[index % 3]};
+		return new String[] {Integer.toString(Math.floorDiv(index, 3)), VALUE[index % 3]};
 	}
 	
 	/**
@@ -86,7 +95,7 @@ public class PixelColor extends Color{
 					}
 					int rgb = b1.getRGB(w, h);
 					b1.setRGB
-					(w, h, new PixelColor((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, (rgb) & 0xff).convert().getRGB());
+					(w, h, new PixelColor((rgb >> 16) & 0xff, (rgb >> 8) & 0xff, (rgb >> 0) & 0xff).convert().getRGB());
 				}
 			}
 			System.out.println("Conversion successfully finished!");
@@ -134,6 +143,7 @@ public class PixelColor extends Color{
 		int value = small % 3;
 		
 		PixelColor c = colors[main];
+		System.out.println("id:" + main);
 		switch (value) {
 		case 0:
 			return c.getLowValue();
@@ -173,7 +183,7 @@ public class PixelColor extends Color{
 		return Math.sqrt(pretotal.doubleValue());
 	}
 	
-	public strictfp PixelColor getMidValue() {
+	public PixelColor getMidValue() {
 		int R = (int)Math.floor(this.getRed() * 220 / 255);
 		int G = (int)Math.floor(this.getGreen() * 220 / 255);
 		int B = (int)Math.floor(this.getBlue() * 220 / 255);
@@ -185,7 +195,7 @@ public class PixelColor extends Color{
 		return this;
 	}
 	
-	public strictfp PixelColor getLowValue() {
+	public PixelColor getLowValue() {
 		int R = (int)Math.floor(this.getRed() * 180 / 255);
 		int G = (int)Math.floor(this.getGreen() * 180 / 255);
 		int B = (int)Math.floor(this.getBlue() * 180 / 255);
